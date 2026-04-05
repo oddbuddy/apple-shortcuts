@@ -74,6 +74,16 @@ This tells the Shortcuts app to:
 - Run the shortcut named `ReceivePhoto`
 - Pass the base64 data as text input
 
+### Dynamic Photo Capture URLs
+You can also customize the photo capture behavior with query parameters:
+
+```
+snap-on-open-wapp.html?delay=2000
+```
+- `delay` - Milliseconds to wait before capturing photo (default: 1500)
+  - Example: `?delay=1000` for instant capture
+  - Example: `?delay=3000` for 3 second delay
+
 ## 📝 Files Explained
 
 ### `snap-on-open-wapp.html`
@@ -84,6 +94,7 @@ This tells the Shortcuts app to:
   - Automatic camera access request
   - Photo capture after 1.5 second delay
   - Base64 encoding with 0.6 quality JPEG
+  - WhatsApp logo watermark on bottom-right of captured photo
 
 ### `index.html`
 - **Purpose**: Landing page and documentation hub
@@ -95,11 +106,21 @@ This tells the Shortcuts app to:
 ## 🎨 Customization
 
 ### Modify Capture Delay
-In `snap-on-open-wapp.html`, change the timeout value (line with `setTimeout`):
+You can control the capture delay in two ways:
+
+**Option 1: Query Parameter (Recommended)**
+Pass the `delay` parameter (in milliseconds) via the URL:
+```
+snap-on-open-wapp.html?delay=2000
+```
+- Default delay: 1500ms (1.5 seconds)
+- Example: `?delay=3000` for 3 second delay
+
+**Option 2: Hard-code in File**
+Edit the JavaScript in `snap-on-open-wapp.html` and change the default value:
 ```javascript
-setTimeout(() => {
-  takePhoto();
-}, 1500);  // Change 1500 to your desired milliseconds
+const delay = parseInt(urlParams.get('delay') || '1500', 10);
+// Change '1500' to your desired milliseconds
 ```
 
 ### Change Image Quality

